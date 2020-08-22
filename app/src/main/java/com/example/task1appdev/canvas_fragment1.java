@@ -17,8 +17,21 @@ public class canvas_fragment1 extends View {
 
 
     public static Path path;
+    boolean flag;
     public static Paint paint;
-    canvas_fragment2 canvasFragment2;
+    private onCanvastouch mcallback;
+   public interface onCanvastouch{
+       void onTouch(Path path);
+   }
+   public void settheMcallback(onCanvastouch callbk){
+       mcallback=callbk;
+
+    }
+
+   public void pathset(Path path)
+   {
+       this.path=path;
+   }
 
 
 
@@ -33,7 +46,6 @@ public class canvas_fragment1 extends View {
         paint.setStyle(Paint.Style.STROKE);
         paint.setStrokeWidth(5f);
 
-        canvasFragment2 = new canvas_fragment2(getContext());
     }
 
     public canvas_fragment1(Context context, @Nullable AttributeSet attrs) {
@@ -51,16 +63,15 @@ public class canvas_fragment1 extends View {
     private void init(@Nullable AttributeSet set) {
 
 
-        canvasFragment2 = new canvas_fragment2(getContext());
 
-//        paint = new Paint();
-//        path=new Path();
-//        paint.setAntiAlias(true);
-//        paint.setColor(Color.RED);
-//        paint.setStrokeJoin(Paint.Join.ROUND);
-//        paint.setStyle(Paint.Style.STROKE);
-//        paint.setStrokeWidth(5f);
-
+        paint = new Paint();
+        path=new Path();
+        paint.setAntiAlias(true);
+        paint.setColor(Color.RED);
+        paint.setStrokeJoin(Paint.Join.ROUND);
+        paint.setStyle(Paint.Style.STROKE);
+        paint.setStrokeWidth(5f);
+        flag=true;
 
 
 
@@ -69,9 +80,12 @@ public class canvas_fragment1 extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-
-        canvasFragment2.postInvalidate();
+        if(!flag)
+        {
+            init(null);
+        }
         canvas.drawPath(path, paint);
+        invalidate();
 
     }
 
@@ -88,15 +102,17 @@ public class canvas_fragment1 extends View {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 path.moveTo(x, y);
+                mcallback.onTouch(path);
                 postInvalidate();
-                canvasFragment2.path.moveTo(x + 50, y + 50);
-                canvasFragment2.postInvalidate();
+//                canvasFragment2.path.moveTo(x + 50, y + 50);
+//                canvasFragment2.postInvalidate();
                 return true;
 
             case MotionEvent.ACTION_MOVE:
                 path.lineTo(x, y);
-                canvasFragment2.path.lineTo(x + 50, y + 50);
-                canvasFragment2.postInvalidate();
+                mcallback.onTouch(path);
+//                canvasFragment2.path.lineTo(x + 50, y + 50);
+//                canvasFragment2.postInvalidate();
                 break;
 
             case MotionEvent.ACTION_UP:
@@ -104,24 +120,25 @@ public class canvas_fragment1 extends View {
 
 
         }
+//        m.oninputAsent(path);
         postInvalidate();
-        canvasFragment2.postInvalidate();
+//        canvasFragment2.postInvalidate();
         return true;
     }
 
-    public void updateUIdown(float x, float y) {
-        canvasFragment2.path.moveTo(x, y);
-        canvasFragment2.postInvalidate();
+//    public void updateUIdown(float x, float y) {
+////        canvasFragment2.path.moveTo(x, y);
+////        canvasFragment2.postInvalidate();
+//
+//    }
+//
+//    public void updateUImove(float x, float y) {
+//        canvasFragment2.path.lineTo(x, y);
+//        canvasFragment2.postInvalidate();
 
     }
 
-    public void updateUImove(float x, float y) {
-        canvasFragment2.path.lineTo(x, y);
-        canvasFragment2.postInvalidate();
-
-    }
 
 
 
 
-}

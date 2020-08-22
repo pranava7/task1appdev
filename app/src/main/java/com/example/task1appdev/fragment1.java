@@ -21,24 +21,68 @@ import androidx.constraintlayout.solver.widgets.Rectangle;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-public class fragment1 extends Fragment {
 
-    public canvas_fragment1 canvas_fragment1;
+
+public class fragment1 extends Fragment implements canvas_fragment1.onCanvastouch {
+
+    public canvas_fragment1 Canvas_fragment1;
+    private FragmentAlistener Alistener;
+
+    @Override
+    public void onTouch(Path path) {
+        Alistener.oninputAsent(path);
+    }
+
+    public interface FragmentAlistener{
+        void oninputAsent(Path path);
+
+    }
+
+    public fragment1(){
+
+    }
+    public void pathupdate(Path path)
+    {
+        Canvas_fragment1.pathset(path);
+    }
 
 
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-  //      View rootview = inflater.inflate(R.layout.fragment_1, container, false);
-//        RelativeLayout relativelayout =(RelativeLayout) rootview.findViewById(R.id.path1);
+        View rootview= inflater.inflate(R.layout.fragment_1, container, false);
+
+        Canvas_fragment1=rootview.findViewById(R.id.canvas1);
+        Canvas_fragment1.settheMcallback(this);
+
+        return rootview;
+        //        RelativeLayout relativelayout =(RelativeLayout) rootview.findViewById(R.id.path1);
 //        relativelayout.addView(new rectangle(getActivity()));
 
+//        canvas_fragment1 = new canvas_fragment1(container.getContext());
 
-        canvas_fragment1 = new canvas_fragment1(container.getContext());
-        return canvas_fragment1;
+//        return rootview;
 }
 
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        if(context instanceof FragmentAlistener)
+        {
+            Alistener=(FragmentAlistener)context;
+        }
+        else
+        {
+            throw new RuntimeException(context.toString()+"must implement Fragmentalistener");
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        Alistener =null;
+    }
 }
 //          private class rectangle extends View{
 //              public  Paint paint;
